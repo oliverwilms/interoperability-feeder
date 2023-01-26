@@ -28,6 +28,25 @@ ClassMethod DebugStatus(pStatus As %Status) As %Status
 	Quit ..DebugTEST(tStatus)
 }
 
+ClassMethod ExecuteQueryOneValue(pQuery As %String, ByRef pResult As %String, pDEBUG As %Integer = 0) As %Status
+{
+	Do:pDEBUG ..DebugTEST("Feeder.Util - ExecuteQueryOneValue")
+	Do:pDEBUG ..DebugTEST("pQuery = "_pQuery)
+	Set pResult = ""
+	Set rs = ##class(%ResultSet).%New()
+	Set tSC = rs.Prepare(pQuery)
+	Do:pDEBUG ..DebugStatus(tSC)
+	If $$$ISOK(tSC) {
+		Set tSC = rs.Execute()
+		Do:pDEBUG ..DebugStatus(tSC)
+		If $$$ISOK(tSC), rs.Next() Set pResult = rs.GetData(1)
+	}
+	Do rs.Close()
+	Set rs = ""
+	Do:pDEBUG ..DebugTEST("pResult = "_pResult)
+	Quit tSC
+}
+
 ClassMethod FindMyTask(pTaskName As %String = "") As %String
 {
 	New $Namespace
