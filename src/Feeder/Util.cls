@@ -28,4 +28,75 @@ ClassMethod DebugStatus(pStatus As %Status) As %Status
 	Quit ..DebugTEST(tStatus)
 }
 
+ClassMethod FindMyTask(pTaskName As %String = "") As %String
+{
+	New $Namespace
+	Set $Namespace = "%SYS"
+
+	If (pTaskName = "") { Quit "" }
+
+	//Do ..DebugTEST("Feeder.Util - FindMyTask")
+	Set tTaskId = ""
+	Set query = "Select ID from %SYS.Task where Name = '?'"
+	Set query = $REPLACE(query,"?",pTaskName)
+	Set tSC = ..ExecuteQueryOneValue(query,.tTaskId)
+	//Do ..DebugTEST("tTaskId = "_tTaskId)
+	Quit tTaskId
+}
+
+ClassMethod GetTaskFile() As %String
+{
+	Set tDefaultDirectory = "/path/feeder/"
+	Set tDefaultFilename = "FeederTask.json"
+	Set tDirectory = $Get(^myFeeder("Config","TaskFile","Directory"),tDefaultDirectory)
+	Set tFilename = $Get(^myFeeder("Config","TaskFile","Filename"),tDefaultFilename)
+	Set tReturn = tDirectory_tFilename
+	Quit tReturn
+}
+
+ClassMethod ReadJsonFile(pFile As %String, pDebug = 0) As %String
+{
+	Write:pDebug "ReadJsonFile",!
+	Do:pDebug ..DebugTEST("ReadJsonFile")
+	If ($Get(pFile) = "") Quit ""
+	Write:pDebug pFile,!
+	Set tReturn = ""
+	Set timeout = 2
+	Try {
+		Open pFile:("R"):timeout  // read
+		If $test {
+			Write:pDebug "Open",!
+			Do:pDebug ..DebugTEST("Open")
+			Use pFile
+			Do:pDebug ..DebugTEST("Use")
+			Set pos = $ZPOS
+			Do:pDebug ..DebugTEST(pos)
+			Set pos = $ZSEEK(0,0)
+			Do:pDebug ..DebugTEST(pos)
+			For {
+				Set pos = $ZPOS
+				Do:pDebug ..DebugTEST(pos)
+				Read tText
+				Do:pDebug ..DebugTEST($Get(tText))
+				Set:pDebug ^DEBUG($I(DEBUG))=$GET(tText)
+				Set tReturn = tReturn_$Get(tText)
+			}
+			Close pFile
+		}
+	}
+	Catch exception {
+		Do:pDebug ..DebugTEST("Catch")
+		If exception.%IsA("%Exception.SystemException") {
+			Do BACK^%ETN // Log error in error log
+		} Else {
+			Throw exception // We will just throw these to outer error handler
+		}
+		Close pFile
+	}
+	//Use 0
+	//Write:pDebug tReturn,!
+	Set tReturn = $Translate($Get(tReturn),$Char(9)," ")
+	Quit tReturn
+}
+
 }
