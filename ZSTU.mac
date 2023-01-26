@@ -10,10 +10,15 @@ ZSTU
 		Do Feeder()  // Do Stuff in USER namespace
 		Do System()  // Adding Feeder.Task.Scheduler Task
 	}
-	Catch {
+	Catch exception {
 		Set msg = "Catch"
 		Set ^TESTzstu(zstu,$I(^TESTzstu(zstu,0))) = msg
 		Write msg,!
+		If exception.%IsA("%Exception.SystemException") {
+			Do BACK^%ETN // Log error in error log
+		} Else {
+			Throw exception // We will just throw these to outer error handler
+		}
 		Quit
 	}
 	Set msg = "Quit"
