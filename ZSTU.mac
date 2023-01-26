@@ -1,0 +1,64 @@
+ROUTINE ZSTU
+ZSTU
+	Try {
+		Set zstu = $Increment(^TESTzstu)
+		Set ^TESTzstu(zstu) = $ZDateTime($NOW(),8,1,3)_" : "_$JOB_" : "_"ZSTU"
+		Set tHost = $SYSTEM.INetInfo.LocalHostName()
+		Set ^TESTzstu(zstu) = ^TESTzstu(zstu)_" "_tHost
+		Write $ZDateTime($NOW(),8,1,3)_" : "_$JOB_" : ZSTU LocalHostName = "_tHost,!
+		;
+		Do Feeder()  // Do Stuff in USER namespace
+		Do System()  // Adding Feeder.Task.Scheduler Task
+	}
+	Catch {
+		Set msg = "Catch"
+		Set ^TESTzstu(zstu,$I(^TESTzstu(zstu,0))) = msg
+		Write msg,!
+		Quit
+	}
+	Set msg = "Quit"
+	Set ^TESTzstu(zstu,$I(^TESTzstu(zstu,0))) = msg
+	Write msg,!
+	Quit
+	;
+Feeder() PUBLIC {
+	New $NAMESPACE
+	Set $NAMESPACE = "USER"
+	//Do ##class(User.Config).ConfigDirDMLSS()
+	Set tMessageBankAddr = "msgbank-data-0-0-web-iris.aws.com:443"
+	//Do ##class(User.Config).ConfigMessageBankAddr(tMessageBankAddr)
+	//Do ##class(User.Config).CreateSecuritySSLConfig()
+	Do ##class(User.Config).ImportSDS()
+	Do ##class(User.Credential).Setup()
+	Quit
+}
+System() PUBLIC {
+	//ZN "%SYS"
+	// &sql(Select ID into :tID from %SYS.Task where Name = 'Feeder.Task.Scheduler')
+	//if SQLCODE=100 {  // <UNDEFINED>System+5^ZSTU *SQLCODE
+	ZN "USER"
+	Set tID = ##class(Feeder.Util).FindMyTask("Feeder.Task.Scheduler")
+	Write "tID = ",tID,!
+	ZN "%SYS"
+	If ($Get(tID,0) < 1) {
+		Set task = ##class(%SYS.Task).%New()
+		Set task.Name="Feeder.Task.Scheduler"
+		Set task.Description="Feeder.Task.Scheduler"
+		Set task.NameSpace="USER"
+		Set task.RunAsUser="_SYSTEM"
+		Set task.TaskClass="Feeder.Task.Scheduler"
+		Set task.TimePeriod=0  // (DISPLAYLIST = ",Daily,Weekly,Monthly,Monthly Special,Run After,On Demand", VALUELIST = ",0,1,2,3,4,5")
+		Set task.TimePeriodEvery=1
+		Set task.TimePeriodDay=""
+		Set task.DailyFrequency=1  // (DISPLAYLIST = ",Once,Several", VALUELIST = ",0,1")
+		Set task.DailyFrequencyTime=0  // (DISPLAYLIST = ",Minutes,Hourly", VALUELIST = ",0,1")
+		Set task.DailyIncrement=1  // Run every # 
+		Set task.DailyStartTime=0
+		Set task.DailyEndTime=""
+		Set task.Priority=0  // (DISPLAYLIST = ",Normal,Low,High", VALUELIST = ",0,1,2")
+		Set task.StartDate=+$H  // Start today instead of tomorrow
+		Set sc = task.%Save()
+		Do ##class(%SYS.System).WriteToConsoleLog("ZSTU Routine: "_"Adding Feeder.Task.Scheduler Task",0,0)
+	}
+	Quit
+}
