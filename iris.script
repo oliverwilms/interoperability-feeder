@@ -1,6 +1,7 @@
     ;do $System.OBJ.LoadDir("/opt/irisbuild/src","ck",,1)
 
     zn "%SYS"
+    do $SYSTEM.OBJ.Load("/home/irisowner/irisbuild/ZSTU.mac", "ck")
     Do ##class(Security.Users).UnExpireUserPasswords("*")
 
     zn "USER"
