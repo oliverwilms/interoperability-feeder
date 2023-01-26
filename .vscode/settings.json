@@ -4,7 +4,8 @@
         "Dockerfile*": "dockerfile",
         "iris.script": "objectscript"
       },
-    "objectscript.conn" :{
+    "objectscript.conn" : {
+      "server": "iris",
       "ns": "USER",
       "username": "_SYSTEM",
       "password": "SYS",
