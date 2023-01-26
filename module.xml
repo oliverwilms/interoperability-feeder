@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-  <Document name="interoperability-sample.ZPM">
+  <Document name="interoperability-feeder.ZPM">
     <Module>
-      <Name>interoperability-sample</Name>
+      <Name>interoperability-feeder</Name>
       <Description>A simple IRIS interoperability application - reads data from Reddit and filter it.</Description>
-      <Version>0.1.1</Version>
+      <Version>0.0.1</Version>
       <Packaging>module</Packaging>
       <Dependencies>
         <ModuleReference>
@@ -17,7 +17,7 @@
       <Resource Name="TestLookupTable.LUT"/>
       <Resource Name="dc.Reddit.PKG"/>
       <Resource Name="dc.Demo.PKG"/>
-      <Resource Name="SYS.GBL"/>
+      <Resource Name="Feeder.PKG"/>
       <SystemRequirements Version=">=2020.1" Interoperability="enabled" />
     </Module>
   </Document>
