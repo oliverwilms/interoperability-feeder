@@ -11,6 +11,7 @@ USER ${ISC_PACKAGE_MGRUSER}
 WORKDIR /opt/irisbuild
 ##RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisbuild
 COPY --chown=${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} *sh ./
+RUN chmod +x *sh
 
 ARG TESTS=0
 ARG MODULE="interoperability-feeder"
