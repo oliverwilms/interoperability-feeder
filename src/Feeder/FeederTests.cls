@@ -35,8 +35,8 @@ ClassMethod LBTest(
 	Set ^myFeeder("Config","CodeClassName") = "dc.iris.testdata"
 	Set ^myFeeder("Config","CodeClassMethod") = "order"
 	Set tSC = ..Setup(pFiles)
-	Set ^myUnitTestControl("Server") = ##class(Feeder.Util).whichLoadBalancer()
-	Set ^myUnitTestControl("URL") = ##class(Feeder.Util).whichURL()
+	Set ^myUnitTestControl("Server") = $Get(^myFeeder("Config","LoadBalancer"))
+	Set ^myUnitTestControl("URL") = $Get(^myFeeder("Config","CSPOpURL"))
 	Set ^myUnitTestControl("Port") = pPort
 	Set ^myUnitTestControl("Files") = pFiles
 	Set ^myUnitTestControl("whichTest") = "LBTest"
