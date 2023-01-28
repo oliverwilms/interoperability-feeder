@@ -118,4 +118,15 @@ ClassMethod ReadJsonFile(pFile As %String, pDebug = 0) As %String
 	Quit tReturn
 }
 
+ClassMethod TranslateServer(pServer As %String = "") As %String
+{
+	Set tReturnServer = pServer
+	Set tNLB = "-nlb-"
+	If (pServer [ tNLB) {
+		Set tReturnServer = $Piece(pServer,tNLB,1)_"-nlb"
+		Quit tReturnServer
+	}
+	Quit tReturnServer
+}
+
 }
