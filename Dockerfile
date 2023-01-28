@@ -2,11 +2,15 @@ ARG IMAGE=intersystemsdc/irishealth-community
 ARG IMAGE=intersystemsdc/iris-community
 FROM $IMAGE
 
+USER root 
+RUN mkdir -p /opt/transform/practice
+RUN chown -R ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/transform
+
+USER ${ISC_PACKAGE_MGRUSER}
+
 WORKDIR /opt/irisbuild
 ##RUN chown ${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} /opt/irisbuild
 COPY --chown=${ISC_PACKAGE_MGRUSER}:${ISC_PACKAGE_IRISGROUP} *sh ./
-
-##WORKDIR /home/irisowner/irisbuild
 
 ARG TESTS=0
 ARG MODULE="interoperability-feeder"
