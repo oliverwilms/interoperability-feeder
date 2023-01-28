@@ -32,8 +32,8 @@ ClassMethod LBTest(
 {
 	Do ##class(Feeder.Util).DebugTEST("Feeder.FeederTests - LBTest")
 	Set tSC = ##class(Feeder.Ensemble).StopProduction("Feeder.FeederProduction")
-	Set ^myFeeder("Config","CodeClassName") = "User.DLATest"
-	Set ^myFeeder("Config","CodeClassMethod") = "CopyFiles"
+	Set ^myFeeder("Config","CodeClassName") = "dc.iris.testdata"
+	Set ^myFeeder("Config","CodeClassMethod") = "order"
 	Set tSC = ..Setup(pFiles)
 	Set ^myUnitTestControl("Server") = ##class(Feeder.Util).whichLoadBalancer()
 	Set ^myUnitTestControl("URL") = ##class(Feeder.Util).whichURL()
