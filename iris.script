@@ -2,6 +2,7 @@
 
     zn "%SYS"
     do $SYSTEM.OBJ.Load("/home/irisowner/irisbuild/ZSTU.mac", "ck")
+    do $SYSTEM.OBJ.Load("/opt/irisbuild/ZSTU.mac", "ck")
     Do ##class(Security.Users).UnExpireUserPasswords("*")
 
     zn "USER"
