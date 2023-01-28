@@ -7,6 +7,6 @@
 
     zn "USER"
     zpm "install test-data"
-    zpm "load /home/irisowner/irisbuild/ -v":1:1
+    ;zpm "load /home/irisowner/irisbuild/ -v":1:1
     zpm "load /opt/irisbuild/ -v":1:1
     halt
